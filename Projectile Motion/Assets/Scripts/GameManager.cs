@@ -12,7 +12,9 @@ public enum Point_Type
 
 public class GameManager : MonoBehaviour
 {
-    
+    [SerializeField] private Transform startPoint;
+    [SerializeField] private Transform endPoint;
+    private Point_Type pointType = Point_Type.Start;
 
     #region Pooling
 
@@ -55,4 +57,27 @@ public class GameManager : MonoBehaviour
     #endregion
 
 
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            var touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            touchPosition.y -= Constants.yAxisOffset;
+            touchPosition.z = 0f;
+
+            if (pointType == Point_Type.Start)
+            {
+                startPoint.position = touchPosition;
+                Debug.Log("start " + startPoint.position);
+                pointType = Point_Type.End;
+            }
+            else if (pointType == Point_Type.End)
+            {
+                endPoint.position = touchPosition;
+                Debug.Log("end  " + endPoint.position);
+                pointType = Point_Type.Start;
+            }
+        }
+    }
+    
 }
