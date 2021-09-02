@@ -14,7 +14,15 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private Transform startPoint;
     [SerializeField] private Transform endPoint;
+    [SerializeField] private InputField hMaxInput;
+    [SerializeField] private InputField speedInput;
+    
     private Point_Type pointType = Point_Type.Start;
+
+    private int hMax ;
+    private int speed;
+    
+    private bool isProjectileMoving = false;
 
     #region Pooling
 
@@ -79,5 +87,18 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    
+
+
+    public void UpdateHMaxValue()
+    {
+        if (!isProjectileMoving)
+            hMax = int.Parse(hMaxInput.text);
+    }
+
+    public void UpdateSpeedValue()
+    {
+        if (!isProjectileMoving)
+            speed = int.Parse(speedInput.text);
+    }
+
 }
