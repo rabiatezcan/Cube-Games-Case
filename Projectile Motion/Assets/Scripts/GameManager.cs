@@ -18,10 +18,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private InputField speedInput;
 
     private Point_Type pointType = Point_Type.Start;
-    
-    private int hMax =15;
+
+    private int hMax = 15;
     private int speed;
-    
+
     private bool isProjectileMoving = false;
 
     #region Pooling
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
-    
+
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -75,13 +75,11 @@ public class GameManager : MonoBehaviour
             if (pointType == Point_Type.Start)
             {
                 startPoint.position = touchPosition;
-                Debug.Log("start " + startPoint.position);
                 pointType = Point_Type.End;
             }
             else if (pointType == Point_Type.End)
             {
                 endPoint.position = touchPosition;
-                Debug.Log("end  " + endPoint.position);
                 StartCoroutine(ThrowTheBall());
                 isProjectileMoving = false;
                 pointType = Point_Type.Start;
@@ -104,40 +102,44 @@ public class GameManager : MonoBehaviour
 
     IEnumerator ThrowTheBall()
     {
-        isProjectileMoving = true; 
+        isProjectileMoving = true;
         GameObject ball = null;
         ball = GetAvailableObject();
         if (ball == null)
         {
             yield break;
         }
+
         ball.SetActive(true);
         ball.transform.position = startPoint.position;
-        
+
         Vector3 velocity = new Vector3();
-        
+
         Vector3 direction = endPoint.position - startPoint.position;
         float range = direction.magnitude;
         Vector3 unitDirection = direction.normalized;
 
         float maxYAxisPos = startPoint.position.y + hMax;
-        
-        velocity.y = Mathf.Sqrt(-2.0f * -Constants.gravitationalForce * (maxYAxisPos - startPoint.position.y));
-        
-        float timeTohMax = Mathf.Sqrt(-2.0f * (maxYAxisPos - startPoint.position.y) / -Constants.gravitationalForce);
-        float timeToEnd = Mathf.Sqrt(-2.0f * (maxYAxisPos - endPoint.position.y) / -Constants.gravitationalForce);
+
+        velocity.y = Mathf.Sqrt(-2f * -Constants.gravitationalForce * (maxYAxisPos - startPoint.position.y));
+
+        float timeTohMax = Mathf.Sqrt(-2f * (maxYAxisPos - startPoint.position.y) / -Constants.gravitationalForce);
+        float timeToEnd = Mathf.Sqrt(-2f * (maxYAxisPos - endPoint.position.y) / -Constants.gravitationalForce);
         float totalTime = timeTohMax + timeToEnd;
 
         float horizontalVelocity = range / totalTime;
         velocity.x = horizontalVelocity * unitDirection.x;
         velocity.z = horizontalVelocity * unitDirection.z;
-        
-        float time = 0;
+
+        float time = 0f;
         while (time < totalTime)
         {
-            ball.transform.Translate(velocity.x * Time.deltaTime, (velocity.y - (Constants.gravitationalForce * time)) * Time.deltaTime, velocity.z * Time.deltaTime);
+            ball.transform.Translate(velocity.x * Time.deltaTime,
+                (velocity.y - (Constants.gravitationalForce * time)) * Time.deltaTime, velocity.z * Time.deltaTime);
             time += Time.deltaTime;
             yield return null;
         }
-     }
+        
+        ball.SetActive(false);
+    }
 }

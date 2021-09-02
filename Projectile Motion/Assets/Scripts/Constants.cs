@@ -10,4 +10,3 @@ public class Constants
     public const float gravitationalForce = 9.81f;
     public const float yAxisOffset = 3.2f;
 }
-
