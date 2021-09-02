@@ -18,8 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private InputField speedInput;
 
     private Point_Type pointType = Point_Type.Start;
-
-    private int hMax = 15;
+    private int hMax = 5;
     private int speed;
 
     private bool isProjectileMoving = false;
@@ -71,7 +70,7 @@ public class GameManager : MonoBehaviour
             var touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             touchPosition.y -= Constants.yAxisOffset;
             touchPosition.z = 0f;
-
+            
             if (pointType == Point_Type.Start)
             {
                 startPoint.position = touchPosition;
@@ -91,13 +90,13 @@ public class GameManager : MonoBehaviour
     public void UpdateHMaxValue()
     {
         if (!isProjectileMoving)
-            hMax = int.Parse(hMaxInput.text);
+            Int32.TryParse(hMaxInput.text, out hMax);
     }
 
     public void UpdateSpeedValue()
     {
         if (!isProjectileMoving)
-            speed = int.Parse(speedInput.text);
+            Int32.TryParse(speedInput.text, out speed);
     }
 
     IEnumerator ThrowTheBall()
